@@ -118,6 +118,12 @@
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.0</version> <!-- 请根据实际需求选择版本 -->
+        </dependency>
+
 
     </dependencies>
 

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mapper.PmTaskAssignmentHistoryMapper">
+    
+    <resultMap type="PmTaskAssignmentHistory" id="PmTaskAssignmentHistoryResult">
+        <result property="historyId"    column="history_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="assignedTo"    column="assigned_to"    />
+        <result property="assignedBy"    column="assigned_by"    />
+        <result property="assignedTime"    column="assigned_time"    />
+        <result property="remarks"    column="remarks"    />
+    </resultMap>
+
+    <sql id="selectPmTaskAssignmentHistoryVo">
+        select history_id, task_id, assigned_to, assigned_by, assigned_time, remarks from pm_task_assignment_history
+    </sql>
+
+    <select id="selectPmTaskAssignmentHistoryList" parameterType="PmTaskAssignmentHistory" resultMap="PmTaskAssignmentHistoryResult">
+        <include refid="selectPmTaskAssignmentHistoryVo"/>
+        <where>  
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="assignedTo != null "> and assigned_to = #{assignedTo}</if>
+            <if test="assignedBy != null  and assignedBy != ''"> and assigned_by = #{assignedBy}</if>
+            <if test="assignedTime != null "> and assigned_time = #{assignedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPmTaskAssignmentHistoryByHistoryId" parameterType="Long" resultMap="PmTaskAssignmentHistoryResult">
+        <include refid="selectPmTaskAssignmentHistoryVo"/>
+        where history_id = #{historyId}
+    </select>
+
+    <insert id="insertPmTaskAssignmentHistory" parameterType="PmTaskAssignmentHistory" useGeneratedKeys="true" keyProperty="historyId">
+        insert into pm_task_assignment_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">task_id,</if>
+            <if test="assignedTo != null">assigned_to,</if>
+            <if test="assignedBy != null and assignedBy != ''">assigned_by,</if>
+            <if test="assignedTime != null">assigned_time,</if>
+            <if test="remarks != null">remarks,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">#{taskId},</if>
+            <if test="assignedTo != null">#{assignedTo},</if>
+            <if test="assignedBy != null and assignedBy != ''">#{assignedBy},</if>
+            <if test="assignedTime != null">#{assignedTime},</if>
+            <if test="remarks != null">#{remarks},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmTaskAssignmentHistory" parameterType="PmTaskAssignmentHistory">
+        update pm_task_assignment_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="assignedTo != null">assigned_to = #{assignedTo},</if>
+            <if test="assignedBy != null and assignedBy != ''">assigned_by = #{assignedBy},</if>
+            <if test="assignedTime != null">assigned_time = #{assignedTime},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+        </trim>
+        where history_id = #{historyId}
+    </update>
+
+    <delete id="deletePmTaskAssignmentHistoryByHistoryId" parameterType="Long">
+        delete from pm_task_assignment_history where history_id = #{historyId}
+    </delete>
+
+    <delete id="deletePmTaskAssignmentHistoryByHistoryIds" parameterType="String">
+        delete from pm_task_assignment_history where history_id in 
+        <foreach item="historyId" collection="array" open="(" separator="," close=")">
+            #{historyId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mapper.PmTaskDependencyMapper">
+    
+    <resultMap type="PmTaskDependency" id="PmTaskDependencyResult">
+        <result property="id"    column="id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="dependencyId"    column="dependency_id"    />
+    </resultMap>
+
+    <sql id="selectPmTaskDependencyVo">
+        select id, task_id, dependency_id from pm_task_dependency
+    </sql>
+
+    <select id="selectPmTaskDependencyList" parameterType="PmTaskDependency" resultMap="PmTaskDependencyResult">
+        <include refid="selectPmTaskDependencyVo"/>
+        <where>  
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="dependencyId != null "> and dependency_id = #{dependencyId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPmTaskDependencyById" parameterType="Long" resultMap="PmTaskDependencyResult">
+        <include refid="selectPmTaskDependencyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPmTaskDependency" parameterType="PmTaskDependency" useGeneratedKeys="true" keyProperty="id">
+        insert into pm_task_dependency
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">task_id,</if>
+            <if test="dependencyId != null">dependency_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">#{taskId},</if>
+            <if test="dependencyId != null">#{dependencyId},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmTaskDependency" parameterType="PmTaskDependency">
+        update pm_task_dependency
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="dependencyId != null">dependency_id = #{dependencyId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePmTaskDependencyById" parameterType="Long">
+        delete from pm_task_dependency where id = #{id}
+    </delete>
+
+    <delete id="deletePmTaskDependencyByIds" parameterType="String">
+        delete from pm_task_dependency where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectPmTaskDependencyByTaskId" parameterType="Long" resultMap="PmTaskDependencyResult">
+        <include refid="selectPmTaskDependencyVo"/>
+        where task_id = #{taskId}
+    </select>
+</mapper>

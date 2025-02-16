@@ -3,6 +3,7 @@ package com.ruoyi.common.utils;
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -187,5 +188,37 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         LocalDateTime localDateTime = LocalDateTime.of(temporalAccessor, LocalTime.of(0, 0, 0));
         ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
         return Date.from(zdt.toInstant());
+    }
+
+    // 获取当前时间之前多少天的时间
+    public static Date getDateBefore(Date endDate, int days) {
+        if (endDate == null) {
+            throw new IllegalArgumentException("endDate cannot be null");
+        }
+        if (days < 0) {
+            throw new IllegalArgumentException("days must be a non-negative integer");
+        }
+
+        // 将 Date 转换为 LocalDate
+        LocalDate localDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        // 计算前 n 天的日期
+        LocalDate resultDate = localDate.minusDays(days);
+        // 将 LocalDate 转换回 Date
+        return Date.from(resultDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * 判断当前时间是否在指定时间之后
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 如果 startTime 在 endTime 之后，返回 true；否则返回 false
+     * @throws IllegalArgumentException 如果 startTime 或 endTime 为 null
+     */
+    public static boolean isDateBefore(Instant startTime, Instant endTime) {
+        if (startTime == null || endTime == null) {
+            throw new IllegalArgumentException("startTime 和 endTime 不能为空");
+        }
+
+        return startTime.isBefore(endTime);
     }
 }

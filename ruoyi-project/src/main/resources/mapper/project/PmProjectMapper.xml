@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mapper.PmProjectMapper">
+    
+    <resultMap type="PmProject" id="PmProjectResult">
+        <result property="projId"    column="proj_id"    />
+        <result property="projName"    column="proj_name"    />
+        <result property="description"    column="description"    />
+        <result property="leader"    column="leader"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="projectStatus"    column="project_status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delayReason"    column="delay_reason"    />
+    </resultMap>
+
+    <sql id="selectPmProjectVo">
+        select proj_id, proj_name, description, leader, start_time, end_time, project_status, del_flag, create_by, create_time, update_by, update_time, delay_reason from pm_project
+    </sql>
+
+    <select id="selectPmProjectList" parameterType="PmProject" resultMap="PmProjectResult">
+        <include refid="selectPmProjectVo"/>
+        <where>  
+            <if test="projName != null  and projName != ''"> and proj_name like concat('%', #{projName}, '%')</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="leader != null  and leader != ''"> and leader like concat('%', #{leader}, '%')</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="projectStatus != null  and projectStatus != ''"> and project_status = #{projectStatus}</if>
+            <if test="delayReason != null "> and delay_reason = #{delayReason}</if>
+        </where>
+    </select>
+    
+    <select id="selectPmProjectByProjId" parameterType="Long" resultMap="PmProjectResult">
+        <include refid="selectPmProjectVo"/>
+        where proj_id = #{projId}
+    </select>
+
+    <insert id="insertPmProject" parameterType="PmProject" useGeneratedKeys="true" keyProperty="projId">
+        insert into pm_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projName != null and projName != ''">proj_name,</if>
+            <if test="description != null">description,</if>
+            <if test="leader != null">leader,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="projectStatus != null">project_status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delayReason != null">delay_reason,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projName != null and projName != ''">#{projName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="leader != null">#{leader},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="projectStatus != null">#{projectStatus},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delayReason != null">#{delayReason},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmProject" parameterType="PmProject">
+        update pm_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projName != null and projName != ''">proj_name = #{projName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="leader != null">leader = #{leader},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="projectStatus != null">project_status = #{projectStatus},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delayReason != null">delay_reason = #{delayReason},</if>
+        </trim>
+        where proj_id = #{projId}
+    </update>
+
+    <delete id="deletePmProjectByProjId" parameterType="Long">
+        delete from pm_project where proj_id = #{projId}
+    </delete>
+
+    <delete id="deletePmProjectByProjIds" parameterType="String">
+        delete from pm_project where proj_id in 
+        <foreach item="projId" collection="array" open="(" separator="," close=")">
+            #{projId}
+        </foreach>
+    </delete>
+
+    <select id="selectPmProjectByName" parameterType="String" resultMap="PmProjectResult">
+        <include refid="selectPmProjectVo"/>
+        where proj_name = #{projName}
+    </select>
+</mapper>

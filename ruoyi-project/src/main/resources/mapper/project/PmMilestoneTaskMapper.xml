@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mapper.PmMilestoneTaskMapper">
+    
+    <resultMap type="PmMilestoneTask" id="PmMilestoneTaskResult">
+        <result property="id"    column="id"    />
+        <result property="milestoneId"    column="milestone_id"    />
+        <result property="taskId"    column="task_id"    />
+    </resultMap>
+
+    <sql id="selectPmMilestoneTaskVo">
+        select id, milestone_id, task_id from pm_milestone_task
+    </sql>
+
+    <select id="selectPmMilestoneTaskList" parameterType="PmMilestoneTask" resultMap="PmMilestoneTaskResult">
+        <include refid="selectPmMilestoneTaskVo"/>
+        <where>  
+            <if test="milestoneId != null "> and milestone_id = #{milestoneId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPmMilestoneTaskById" parameterType="Long" resultMap="PmMilestoneTaskResult">
+        <include refid="selectPmMilestoneTaskVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPmMilestoneTask" parameterType="PmMilestoneTask" useGeneratedKeys="true" keyProperty="id">
+        insert into pm_milestone_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="milestoneId != null">milestone_id,</if>
+            <if test="taskId != null">task_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="milestoneId != null">#{milestoneId},</if>
+            <if test="taskId != null">#{taskId},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePmMilestoneTask" parameterType="PmMilestoneTask">
+        update pm_milestone_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="milestoneId != null">milestone_id = #{milestoneId},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePmMilestoneTaskById" parameterType="Long">
+        delete from pm_milestone_task where id = #{id}
+    </delete>
+
+    <delete id="deletePmMilestoneTaskByIds" parameterType="String">
+        delete from pm_milestone_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

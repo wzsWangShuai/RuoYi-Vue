@@ -8,6 +8,9 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.core.domain.entity.PmMilestone;
+import com.ruoyi.common.core.domain.entity.PmProject;
+import com.ruoyi.common.core.domain.entity.PmTask;
 
 /**
  * Treeselect树结构实体类
@@ -49,6 +52,27 @@ public class TreeSelect implements Serializable
         this.id = menu.getMenuId();
         this.label = menu.getMenuName();
         this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    public TreeSelect(PmProject project)
+    {
+        this.id = project.getProjId();
+        this.label = project.getProjName();
+        this.children = project.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    public TreeSelect(PmMilestone milestone)
+    {
+        this.id = milestone.getMilestoneId();
+        this.label = milestone.getMilestoneName();
+        this.children = milestone.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    public TreeSelect(PmTask task)
+    {
+        this.id = task.getTaskId();
+        this.label = task.getTaskName();
+        this.children = task.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public Long getId()
